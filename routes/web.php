@@ -53,6 +53,26 @@ Route::prefix('producto')->group(function (){
         $categorias=Category::orderBy('name','asc')->get();
         return $categorias;
     });
+    Route::get('/11/{id?}', function($id=1){
+        $categoria=Category::find($id);
+        return $categoria;
+    });
+    Route::get('/12', function(){
+        $categoria=Category::where('name','like','e%')->get();
+        return $categoria;
+    });
+    Route::get('/13/{id?}', function($id=1){
+        $productos=Category::find($id)->products;
+        return $productos;
+    });
+    Route::get('/14', function($id=1){
+        $categorias=Category::has('products')->get();
+        return $categorias;
+    });
+    Route::get('/15', function(){
+        $categorias=Category::withCount('products')->orderBy('products_count','desc')->get();
+        return $categorias;
+    });
     Route::get('/count', function (){
         return 'Suma del stock de productos';
     });
