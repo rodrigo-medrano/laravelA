@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Models\Category;
 use App\Models\Product;
@@ -8,7 +9,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('prueba.index');
 });
-
 Route::get('/ejemplo', function () {
     return 'Hola Mundo';
 });
@@ -83,4 +83,4 @@ Route::prefix('products')->group(function (){
     Route::delete('/{id}', [ProductController::class, 'destroy']);
 });
 
-Route::resource('categories', 'CategoryController');
+Route::resource('categories', CategoryController::class);
