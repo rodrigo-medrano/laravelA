@@ -14,8 +14,13 @@
                 <td> {{$category->id}}</td>
                 <td> {{$category->name}}</td>
                 <td><a href="{{route('categories.index')}}/{{$category->id}}">Mostrar</a>
-                    <a href="#">Editar</a>
-                <a href="">Eliminar</a></td>
+                    <a href="{{route('categories.edit',$category)}}">Editar</a>
+                    <form action="{{route('categories.destroy',$category)}}" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit">Eliminar</button>
+                    </form>
+                </td>
             </tr>
         @endforeach
     </tbody>
