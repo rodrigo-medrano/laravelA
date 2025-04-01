@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CosaController;
 use App\Http\Controllers\ProductController;
 use App\Models\Category;
 use App\Models\Product;
@@ -81,7 +82,7 @@ Route::prefix('producto')->group(function (){
     });
 });
 
-Route::prefix('products')->group(function (){
+/*Route::prefix('products')->group(function (){
     Route::get('/', function (){
         return 'Listado de productos';
     });
@@ -101,6 +102,8 @@ Route::prefix('products')->group(function (){
         return 'Actualizar el producto '.$id;
     });
     Route::delete('/{id}', [ProductController::class, 'destroy']);
-});
+});*/
 
 Route::resource('categories', CategoryController::class);
+Route::resource('products', ProductController::class);
+Route::resource('cosas',CosaController::class);

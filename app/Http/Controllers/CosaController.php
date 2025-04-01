@@ -2,18 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
 use Illuminate\Http\Request;
 
-class ProductController extends Controller
+class CosaController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $productos=Product::all();
-        return view('products.index', ['productos'=>$productos]);
+        //
     }
 
     /**
