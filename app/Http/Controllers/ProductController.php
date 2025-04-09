@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
@@ -10,9 +11,10 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $productos=Product::all();
+        $search=$request->input('search');
+        $productos=Product::whereRaw(' LOWER(name) like ?',['%'.strtolower($search).'%'])->orWhereRaw('LOWER(description) like ?',['%'.strtolower($search).'%'])->paginate(5);
         return view('products.index', ['productos'=>$productos]);
     }
 
@@ -21,7 +23,8 @@ class ProductController extends Controller
      */
     public function create()
     {
-        //
+        $categories=Category::all();
+        return view('products.create',compact('categories'));
     }
 
     /**
@@ -29,7 +32,26 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator=$request->validate([
+            'name'=>'required|unique:products,name',
+            'description'=>'required',
+            'stock'=>'required|numeric|min:0',
+            'brand'=>'required',
+            'price'=>'required|numeric',
+            'image'=>'required|file',
+            'category_id'=>'required|exists:categories,id'
+        ]);
+        $product=new Product();
+        $product->name=$request->input('name');
+        $product->description=$request->input('description');
+        $product->price=$request->input('price');
+        $product->category_id=$request->input('category_id');
+        if($request->hasFile('image')){
+            $product->image=$request->file('image')->store('products');
+        }
+        $product->save();
+        return redirect()->route('products.index')->with('success','Producto creado correctamente');
+
     }
 
     /**

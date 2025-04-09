@@ -85,7 +85,7 @@ Route::prefix('producto')->group(function (){
 /*Route::prefix('products')->group(function (){
     Route::get('/', function (){
         return 'Listado de productos';
-    });
+    })->name('products.index');
     Route::get('/new', function (){
         return 'Formulario del producto';
     });
