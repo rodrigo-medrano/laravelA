@@ -7,6 +7,7 @@
     <div>
         <form action="{{route('products.index')}}" method="GET">
             <input type="text" name="search" placeholder="Buscar producto" value="{{ request('search') }}">
+            <input type="range" name="paginas" id="paginas">
             <button type="submit" class="btn btn-secondary">Buscar</button>
         </form>
     </div>

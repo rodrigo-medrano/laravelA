@@ -13,8 +13,9 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
+        $paginas=$request->input('paginas');
         $search=$request->input('search');
-        $productos=Product::whereRaw(' LOWER(name) like ?',['%'.strtolower($search).'%'])->orWhereRaw('LOWER(description) like ?',['%'.strtolower($search).'%'])->paginate(5);
+        $productos=Product::whereRaw(' LOWER(name) like ?',['%'.strtolower($search).'%'])->orWhereRaw('LOWER(description) like ?',['%'.strtolower($search).'%'])->paginate($paginas);
         return view('products.index', ['productos'=>$productos]);
     }
 
@@ -37,9 +38,12 @@ class ProductController extends Controller
             'description'=>'required',
             'stock'=>'required|numeric|min:0',
             'brand'=>'required',
-            'price'=>'required|numeric',
-            'image'=>'required|file',
+            'price'=>'required|numeric|min:0',
+            'image'=>'required|file|max:2048',
             'category_id'=>'required|exists:categories,id'
+        ],[
+            'name.required'=>'El nombre es necesario',
+            'description.required'=>'El campo descripcion es requerido'
         ]);
         $product=new Product();
         $product->name=$request->input('name');
@@ -51,7 +55,6 @@ class ProductController extends Controller
         }
         $product->save();
         return redirect()->route('products.index')->with('success','Producto creado correctamente');
-
     }
 
     /**
