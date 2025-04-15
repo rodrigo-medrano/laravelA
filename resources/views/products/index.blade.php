@@ -34,9 +34,10 @@
                     <td>{{ $product->stock }}</td>
                     <td>{{ $product->brand }}</td>
                     <td>{{ $product->price }}</td>
-                    <td>{{ $product->image }}</td>
+                    <td><img src="{{asset($product->image)}}" alt="{{$product->name}}"></td>
                     <td>{{ $product->category->name }}</td>
                     <td>
+                        <a href="{{ route('products.show', $product) }}" class="btn btn-success">Mostrar</a>
                         <a href="{{ route('products.edit', $product) }}" class="btn btn-warning">Editar</a>
                         <form action="{{ route('products.destroy', $product) }}" method="POST" style="display:inline;">
                             @csrf

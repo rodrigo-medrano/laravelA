@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Validation;
 
 class ProductController extends Controller
 {
@@ -33,26 +34,35 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $validator=$request->validate([
+        $request->validate([
             'name'=>'required|unique:products,name',
             'description'=>'required',
             'stock'=>'required|numeric|min:0',
             'brand'=>'required',
             'price'=>'required|numeric|min:0',
-            'image'=>'required|file|max:2048',
+            'image'=>'required|file|image|extensions:jpg,jpeg,png',
             'category_id'=>'required|exists:categories,id'
         ],[
-            'name.required'=>'El nombre es necesario',
-            'description.required'=>'El campo descripcion es requerido'
+        ],[
+            'name'=>'Nombre',
+            'description'=>'Descripción',
+            'stock'=>'Stock',
+            'brand'=>'Marca',
+            'price'=>'Precio',
+            'image'=>'Imagen',
+            'category_id'=>'Categoría'
         ]);
         $product=new Product();
         $product->name=$request->input('name');
         $product->description=$request->input('description');
+        $product->stock=$request->input('stock');
+        $product->brand=$request->input('brand');
         $product->price=$request->input('price');
-        $product->category_id=$request->input('category_id');
         if($request->hasFile('image')){
             $product->image=$request->file('image')->store('products');
         }
+        $product->category_id=$request->input('category_id');
+
         $product->save();
         return redirect()->route('products.index')->with('success','Producto creado correctamente');
     }
@@ -60,17 +70,18 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Product $product)
     {
-        //
+        return view('products.show',compact('product'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Product $product)
     {
-        //
+        $categories=Category::all();
+        return view('products.edit',compact('product','categories'));
     }
 
     /**
@@ -78,7 +89,37 @@ class ProductController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'name'=>'required|unique:products,name',
+            'description'=>'required',
+            'stock'=>'required|numeric|min:0',
+            'brand'=>'required',
+            'price'=>'required|numeric|min:0',
+            'image'=>'required|file|image|extensions:jpg,jpeg,png',
+            'category_id'=>'required|exists:categories,id'
+        ],[
+        ],[
+            'name'=>'Nombre',
+            'description'=>'Descripción',
+            'stock'=>'Stock',
+            'brand'=>'Marca',
+            'price'=>'Precio',
+            'image'=>'Imagen',
+            'category_id'=>'Categoría'
+        ]);
+        $product=Product::find($id);
+        $product->name=$request->input('name');
+        $product->description=$request->input('description');
+        $product->stock=$request->input('stock');
+        $product->brand=$request->input('brand');
+        $product->price=$request->input('price');
+        if($request->hasFile('image')){
+            $product->image=$request->file('image')->store('products');
+        }
+        $product->category_id=$request->input('category_id');
+
+        $product->save();
+        return redirect()->route('products.index')->with('success','Producto creado correctamente');
     }
 
     /**
