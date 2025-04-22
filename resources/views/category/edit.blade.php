@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.app2')
 @section('title','Editar Categoria')
 @section('content')
     <h2>Editar Categoria</h2>

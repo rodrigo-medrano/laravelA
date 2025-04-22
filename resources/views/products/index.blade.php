@@ -1,14 +1,18 @@
-@extends('layouts.app')
+@extends('layouts.app2')
 @section('title', 'Productos')
 @section('content')
-<div class="container">
+<div class="container mb-4">
     @if (@session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
         </div>
 
     @endif
-    <h1>Lista de Productos</h1>
+    <header class="bg-white dark:bg-gray-800 shadow">
+        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+            Lista de Productos
+        </div>
+    </header>
     <a href="{{ route('products.create') }}" class="btn btn-primary">Crear Producto</a>
     <div>
         <form action="{{route('products.index')}}" method="GET">
@@ -40,7 +44,10 @@
                     <td>{{ $product->stock }}</td>
                     <td>{{ $product->brand }}</td>
                     <td>{{ $product->price }}</td>
-                    <td><img src="{{asset('storage/'.$product->image)}}" alt="{{$product->name}}"></td>
+                    <td>@if($product->image)<img src="{{asset('storage/'.$product->image)}}" alt="{{$product->name}}">
+                        @else
+                        No hay imagen
+                        @endif</td>
                     <td>{{ $product->category->name }}</td>
                     <td>
                         <a href="{{ route('products.show', $product) }}" class="btn btn-success">Mostrar</a>
@@ -56,4 +63,5 @@
         </tbody>
     </table>
         {{ $productos->links() }}
+</div>
 @endsection

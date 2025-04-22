@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.app2')
 @section('title','Mostrar Elemento')
 @section('content')
     <b>Nombre: &nbsp;</b>{{$category->name}}<br>

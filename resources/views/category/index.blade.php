@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.app2')
 @section('title', 'Categorias')
 @section('content')
 <a class="btn btn-primary" href="{{route('categories.create')}}">Crear Categoria</a>
