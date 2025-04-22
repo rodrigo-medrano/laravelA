@@ -2,12 +2,18 @@
 @section('title', 'Productos')
 @section('content')
 <div class="container">
+    @if (@session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+
+    @endif
     <h1>Lista de Productos</h1>
     <a href="{{ route('products.create') }}" class="btn btn-primary">Crear Producto</a>
     <div>
         <form action="{{route('products.index')}}" method="GET">
             <input type="text" name="search" placeholder="Buscar producto" value="{{ request('search') }}">
-            <input type="range" name="paginas" id="paginas">
+            <input type="number" name="paginas" id="paginas">
             <button type="submit" class="btn btn-secondary">Buscar</button>
         </form>
     </div>
@@ -34,7 +40,7 @@
                     <td>{{ $product->stock }}</td>
                     <td>{{ $product->brand }}</td>
                     <td>{{ $product->price }}</td>
-                    <td><img src="{{asset($product->image)}}" alt="{{$product->name}}"></td>
+                    <td><img src="{{asset('storage/'.$product->image)}}" alt="{{$product->name}}"></td>
                     <td>{{ $product->category->name }}</td>
                     <td>
                         <a href="{{ route('products.show', $product) }}" class="btn btn-success">Mostrar</a>

@@ -7,6 +7,7 @@
     <form action="{{route('products.update',$product)}}" method="post" enctype="multipart/form-data">
         @method('PUT')
         @csrf
+        <input type="hidden" name="id" value="{{$product->id}}">
         <div class="row mb-3">
             <div class="col-3">
                 <label for="name" class="form-label">Nombre</label>

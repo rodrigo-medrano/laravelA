@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreProduct;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -40,9 +41,10 @@ class ProductController extends Controller
             'stock'=>'required|numeric|min:0',
             'brand'=>'required',
             'price'=>'required|numeric|min:0',
-            'image'=>'required|file|image|extensions:jpg,jpeg,png',
+            'image'=>'required|file|extensions:jpg,jpeg,png,gif',
             'category_id'=>'required|exists:categories,id'
         ],[
+            'image.extensions'=>'El archivo debe ser de tipo: jpg, jpeg, png, gif',
         ],[
             'name'=>'Nombre',
             'description'=>'Descripción',
@@ -52,6 +54,7 @@ class ProductController extends Controller
             'image'=>'Imagen',
             'category_id'=>'Categoría'
         ]);
+
         $product=new Product();
         $product->name=$request->input('name');
         $product->description=$request->input('description');
@@ -59,7 +62,7 @@ class ProductController extends Controller
         $product->brand=$request->input('brand');
         $product->price=$request->input('price');
         if($request->hasFile('image')){
-            $product->image=$request->file('image')->store('products');
+            $product->image=$request->file('image')->store('products','public');
         }
         $product->category_id=$request->input('category_id');
 
@@ -87,7 +90,7 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Product $product)
     {
         $request->validate([
             'name'=>'required|unique:products,name',
@@ -107,26 +110,26 @@ class ProductController extends Controller
             'image'=>'Imagen',
             'category_id'=>'Categoría'
         ]);
-        $product=Product::find($id);
         $product->name=$request->input('name');
         $product->description=$request->input('description');
         $product->stock=$request->input('stock');
         $product->brand=$request->input('brand');
         $product->price=$request->input('price');
         if($request->hasFile('image')){
-            $product->image=$request->file('image')->store('products');
+            $product->image=$request->file('image')->store('products','public');
         }
         $product->category_id=$request->input('category_id');
 
         $product->save();
-        return redirect()->route('products.index')->with('success','Producto creado correctamente');
+        return redirect()->route('products.index')->with('success','Producto editado correctamente');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Product $product)
     {
-        //
+        $product->delete();
+        return redirect()->route('products.index')->with('success','Producto eliminado correctamente');
     }
 }

@@ -69,7 +69,8 @@
             <div class="col-3">
                 <label for="category_id">Categoría</label>
             </div>
-            <div class="col-9"><select name='category_id' id='category_id' class='form-select'>
+            <div class="col-9">
+                <select name='category_id' id='category_id' class='form-select'>
                     @foreach ($categories as $category)
                     <option value="{{ $category->id }}" @if($category->id==old('category_id')) selected @endif>{{ $category->name }}</option>
                     @endforeach
