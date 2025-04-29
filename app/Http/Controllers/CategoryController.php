@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\CategoriesExport;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Maatwebsite\Excel\Facades\Excel;
 
 class CategoryController extends Controller
 {
@@ -75,5 +77,10 @@ class CategoryController extends Controller
         $categories = Category::all();
         $pdf = Pdf::loadView('category.report', compact('categories'));
         return $pdf->download('categories_report.pdf');
+    }
+
+    public function excel()
+    {
+        return Excel::download(new CategoriesExport,'categories.xlsx');
     }
 }
