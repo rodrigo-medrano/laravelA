@@ -14,6 +14,7 @@
         </div>
     </header>
     <a href="{{ route('products.create') }}" class="btn btn-primary">Crear Producto</a>
+    <a href="{{ route('products.report') }}" class="btn btn-primary">Crear Reporte</a>
     <div>
         <form action="{{route('products.index')}}" method="GET">
             <input type="text" name="search" placeholder="Buscar producto" value="{{ request('search') }}">

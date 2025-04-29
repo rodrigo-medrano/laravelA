@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class CategoryController extends Controller
 {
@@ -67,5 +68,12 @@ class CategoryController extends Controller
     {
         $category->delete();
         return redirect()->route('categories.index');
+    }
+
+    public function generateReport()
+    {
+        $categories = Category::all();
+        $pdf = Pdf::loadView('category.report', compact('categories'));
+        return $pdf->download('categories_report.pdf');
     }
 }

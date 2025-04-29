@@ -1,7 +1,11 @@
 @extends('layouts.app2')
 @section('title', 'Crear productos')
 @section('content')
-
+@foreach ($errors->all() as $error)
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <strong>¡Error!</strong> {{$error}}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
 <h2>Productos</h2>
 <div class="container">
     <form action="{{route('products.store')}}" method="post" enctype="multipart/form-data">

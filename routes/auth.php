@@ -103,6 +103,7 @@ Route::middleware('guest')->group(function () {
         Route::post('avg/{id}', function ($id) {
             return 'Promedio de precio de productos ' . $id;
         });
+
     });
 });
 
@@ -129,4 +130,5 @@ Route::middleware('auth')->group(function () {
         ->name('logout');
     Route::resource('categories', CategoryController::class);
     Route::resource('products', ProductController::class);
+
 });

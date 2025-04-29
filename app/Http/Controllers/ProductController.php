@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Validation;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ProductController extends Controller
 {
@@ -15,10 +16,10 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        $paginas=$request->input('paginas');
-        $search=$request->input('search');
-        $productos=Product::whereRaw(' LOWER(name) like ?',['%'.strtolower($search).'%'])->orWhereRaw('LOWER(description) like ?',['%'.strtolower($search).'%'])->paginate($paginas);
-        return view('products.index', ['productos'=>$productos]);
+        $paginas = $request->input('paginas');
+        $search = $request->input('search');
+        $productos = Product::whereRaw(' LOWER(name) like ?', ['%' . strtolower($search) . '%'])->orWhereRaw('LOWER(description) like ?', ['%' . strtolower($search) . '%'])->paginate($paginas);
+        return view('products.index', ['productos' => $productos]);
     }
 
     /**
@@ -26,8 +27,8 @@ class ProductController extends Controller
      */
     public function create()
     {
-        $categories=Category::all();
-        return view('products.create',compact('categories'));
+        $categories = Category::all();
+        return view('products.create', compact('categories'));
     }
 
     /**
@@ -36,38 +37,38 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name'=>'required|unique:products,name',
-            'description'=>'required',
-            'stock'=>'required|numeric|min:0',
-            'brand'=>'required',
-            'price'=>'required|numeric|min:0',
-            'image'=>'required|file|extensions:jpg,jpeg,png,gif',
-            'category_id'=>'required|exists:categories,id'
-        ],[
-            'image.extensions'=>'El archivo debe ser de tipo: jpg, jpeg, png, gif',
-        ],[
-            'name'=>'Nombre',
-            'description'=>'Descripción',
-            'stock'=>'Stock',
-            'brand'=>'Marca',
-            'price'=>'Precio',
-            'image'=>'Imagen',
-            'category_id'=>'Categoría'
+            'name' => 'required|unique:products,name',
+            'description' => 'required',
+            'stock' => 'required|numeric|min:0',
+            'brand' => 'required',
+            'price' => 'required|numeric|min:0',
+            'image' => 'required|file|extensions:jpg,jpeg,png,gif',
+            'category_id' => 'required|exists:categories,id'
+        ], [
+            'image.extensions' => 'El archivo debe ser de tipo: jpg, jpeg, png, gif',
+        ], [
+            'name' => 'Nombre',
+            'description' => 'Descripción',
+            'stock' => 'Stock',
+            'brand' => 'Marca',
+            'price' => 'Precio',
+            'image' => 'Imagen',
+            'category_id' => 'Categoría'
         ]);
 
-        $product=new Product();
-        $product->name=$request->input('name');
-        $product->description=$request->input('description');
-        $product->stock=$request->input('stock');
-        $product->brand=$request->input('brand');
-        $product->price=$request->input('price');
-        if($request->hasFile('image')){
-            $product->image=$request->file('image')->store('products','public');
+        $product = new Product();
+        $product->name = $request->input('name');
+        $product->description = $request->input('description');
+        $product->stock = $request->input('stock');
+        $product->brand = $request->input('brand');
+        $product->price = $request->input('price');
+        if ($request->hasFile('image')) {
+            $product->image = $request->file('image')->store('products', 'public');
         }
-        $product->category_id=$request->input('category_id');
+        $product->category_id = $request->input('category_id');
 
         $product->save();
-        return redirect()->route('products.index')->with('success','Producto creado correctamente');
+        return redirect()->route('products.index')->with('success', 'Producto creado correctamente');
     }
 
     /**
@@ -75,7 +76,7 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        return view('products.show',compact('product'));
+        return view('products.show', compact('product'));
     }
 
     /**
@@ -83,8 +84,8 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        $categories=Category::all();
-        return view('products.edit',compact('product','categories'));
+        $categories = Category::all();
+        return view('products.edit', compact('product', 'categories'));
     }
 
     /**
@@ -93,35 +94,34 @@ class ProductController extends Controller
     public function update(Request $request, Product $product)
     {
         $request->validate([
-            'name'=>'required|unique:products,name,'.$product->id,
-            'description'=>'required',
-            'stock'=>'required|numeric|min:0',
-            'brand'=>'required',
-            'price'=>'required|numeric|min:0',
-            'image'=>'required|file|image|extensions:jpg,jpeg,png',
-            'category_id'=>'required|exists:categories,id'
-        ],[
-        ],[
-            'name'=>'Nombre',
-            'description'=>'Descripción',
-            'stock'=>'Stock',
-            'brand'=>'Marca',
-            'price'=>'Precio',
-            'image'=>'Imagen',
-            'category_id'=>'Categoría'
+            'name' => 'required|unique:products,name,' . $product->id,
+            'description' => 'required',
+            'stock' => 'required|numeric|min:0',
+            'brand' => 'required',
+            'price' => 'required|numeric|min:0',
+            'image' => 'required|file|image|extensions:jpg,jpeg,png',
+            'category_id' => 'required|exists:categories,id'
+        ], [], [
+            'name' => 'Nombre',
+            'description' => 'Descripción',
+            'stock' => 'Stock',
+            'brand' => 'Marca',
+            'price' => 'Precio',
+            'image' => 'Imagen',
+            'category_id' => 'Categoría'
         ]);
-        $product->name=$request->input('name');
-        $product->description=$request->input('description');
-        $product->stock=$request->input('stock');
-        $product->brand=$request->input('brand');
-        $product->price=$request->input('price');
-        if($request->hasFile('image')){
-            $product->image=$request->file('image')->store('products','public');
+        $product->name = $request->input('name');
+        $product->description = $request->input('description');
+        $product->stock = $request->input('stock');
+        $product->brand = $request->input('brand');
+        $product->price = $request->input('price');
+        if ($request->hasFile('image')) {
+            $product->image = $request->file('image')->store('products', 'public');
         }
-        $product->category_id=$request->input('category_id');
+        $product->category_id = $request->input('category_id');
 
         $product->save();
-        return redirect()->route('products.index')->with('success','Producto editado correctamente');
+        return redirect()->route('products.index')->with('success', 'Producto editado correctamente');
     }
 
     /**
@@ -130,6 +130,13 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         $product->delete();
-        return redirect()->route('products.index')->with('success','Producto eliminado correctamente');
+        return redirect()->route('products.index')->with('success', 'Producto eliminado correctamente');
+    }
+
+    public function generateReport()
+    {
+        $products = Product::all();
+        $pdf = Pdf::loadView('products.report', compact('products'));
+        return $pdf->download('reporte_productos.pdf');
     }
 }
